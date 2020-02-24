@@ -14,6 +14,9 @@
 #include "cores/VideoPlayer/VideoRenderers/RenderFactory.h"
 #include "cores/VideoPlayer/VideoRenderers/RenderFlags.h"
 #include "rendering/gles/RenderSystemGLES.h"
+#include "settings/Settings.h"
+#include "settings/SettingsComponent.h"
+#include "settings/lib/Setting.h"
 #include "utils/EGLFence.h"
 #include "utils/GLUtils.h"
 #include "utils/log.h"
@@ -21,6 +24,11 @@
 
 using namespace KODI::WINDOWING::GBM;
 using namespace KODI::UTILS::EGL;
+
+namespace
+{
+constexpr auto SETTING_VIDEOPLAYER_USEPRIMERENDERER = "videoplayer.useprimerenderer";
+}
 
 CRendererDRMPRIMEGLES::~CRendererDRMPRIMEGLES()
 {
@@ -37,6 +45,11 @@ CBaseRenderer* CRendererDRMPRIMEGLES::Create(CVideoBuffer* buffer)
 
 void CRendererDRMPRIMEGLES::Register()
 {
+  CServiceBroker::GetSettingsComponent()
+      ->GetSettings()
+      ->GetSetting(SETTING_VIDEOPLAYER_USEPRIMERENDERER)
+      ->SetVisible(true);
+
   VIDEOPLAYER::CRendererFactory::RegisterRenderer("drm_prime_gles", CRendererDRMPRIMEGLES::Create);
 }
 
